@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GranitAS — logistika birjası">
+<title>GranitAS - Logistika Birjası</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<style>
+:root{--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--primary:#0ea5e9;--hover:#0284c7;--border:#e2e8f0;--danger:#ef4444;--success:#10b981;--warning:#f59e0b}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}body{min-height:100vh}.hidden{display:none!important}
+button,input,select{font:inherit}button{cursor:pointer;border:0}.container{max-width:1180px;margin:auto;padding:16px;padding-bottom:92px}.topbar{background:#050505;color:#fff;position:sticky;top:0;z-index:30}.topbar-inner{max-width:1180px;margin:auto;min-height:64px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:800}.logo span{color:var(--primary)}.user-mini{font-size:13px;color:#cbd5e1}.nav-actions{display:flex;align-items:center;gap:8px}.btn{padding:10px 14px;border-radius:10px;font-weight:700;background:var(--primary);color:#fff}.btn:hover{background:var(--hover)}.btn.secondary{background:#e2e8f0;color:#0f172a}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.btn.small{padding:7px 10px;font-size:12px}.auth-wrap{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:24px}.auth-card{width:min(480px,100%);background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 12px 40px #0f172a12}.auth-card h1{margin:0 0 8px}.muted{color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin:0 0 16px}.tab{padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;white-space:nowrap}.tab.active{background:#0f172a;color:#fff;border-color:#0f172a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}.card h2,.card h3{margin:0 0 12px}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.form-control{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:0}.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px #0ea5e91c}.actions{display:flex;gap:8px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}.stat b{display:block;font-size:28px;margin-top:6px}.ad-list{display:grid;gap:12px}.ad-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:15px}.ad-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.ad-title{font-size:18px;font-weight:800}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#e0f2fe;color:#0369a1}.route{margin:8px 0;font-weight:700}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;color:#334155;font-size:13px}.detail{padding:7px 9px;background:#f8fafc;border-radius:8px}.ad-footer{margin-top:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--border);padding-top:10px}.phone{color:var(--primary);font-weight:700;text-decoration:none}.empty{text-align:center;padding:30px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:14px}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}.modal-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:20px}.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:7px max(16px,calc((100vw - 560px)/2));z-index:40;box-shadow:0 -5px 20px #0f172a0a}.bottom-nav button{background:#fff;border:0;font-weight:700}.nav-side{height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#64748b;border-radius:12px}.nav-side.active{color:#0369a1;background:#e0f2fe}.nav-side span:last-child{font-size:11px}.nav-icon{font-size:21px;line-height:1}.nav-add{width:58px;height:58px;border-radius:50%!important;background:var(--primary)!important;color:#fff;justify-self:center;box-shadow:0 7px 20px #0f172a33;font-size:32px;line-height:1;display:grid;place-items:center;transform:translateY(-12px);border:5px solid #fff!important}.nav-add:hover{background:var(--hover)!important}.fab{display:none}.toast{position:fixed;right:16px;top:80px;z-index:100;background:#0f172a;color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 8px 25px #0003;max-width:min(420px,calc(100vw - 32px))}.toast.error{background:#991b1b}.toast.success{background:#065f46}.loading{opacity:.6;pointer-events:none}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th,.admin-table td{padding:9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}.notice{padding:12px;border-radius:10px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;margin-bottom:14px}.searchbar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:14px}.profile-row{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.profile-meta{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:8px}.kpi{font-size:12px;color:var(--muted)}@media(max-width:760px){.grid,.grid-3,.stats{grid-template-columns:1fr}.searchbar{grid-template-columns:1fr}.topbar-inner{align-items:flex-start}.user-mini{max-width:180px}.details{grid-template-columns:1fr}.bottom-nav{justify-content:space-around}.bottom-nav button{font-size:11px;padding:8px}.fab{right:15px}.profile-meta{grid-template-columns:1fr}}
+
+@media(max-width:480px){.topbar-inner{padding:9px 12px}.logo{font-size:21px}.container{padding:12px;padding-bottom:88px}.auth-wrap{padding:16px}.auth-card{padding:18px}.bottom-nav{height:66px;grid-template-columns:1fr 72px 1fr;padding:6px 10px}.nav-add{width:54px;height:54px;font-size:29px}.nav-side{height:50px}.nav-icon{font-size:19px}}
+
+.profile-hero{display:flex;align-items:center;gap:14px;padding:4px 0 14px}.profile-avatar{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:var(--primary);color:#fff;font-size:23px;font-weight:800;flex:none}.profile-hero h2{margin:0 0 4px}.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.profile-stat{background:#f8fafc;border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}.profile-stat b{display:block;font-size:20px}.ad-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.favorite-btn{background:#f8fafc;border:1px solid var(--border);border-radius:9px;padding:7px 10px;font-size:16px;line-height:1}.favorite-btn.active{background:#fee2e2;border-color:#fecaca}.views{font-size:12px;color:var(--muted);font-weight:700}.rating{display:flex;align-items:center;gap:5px;font-size:13px;color:#f59e0b}.rating-stars{display:flex;gap:1px}.rate-btn{background:transparent;color:#cbd5e1;padding:0;font-size:17px;line-height:1}.rate-btn.active{color:#f59e0b}.rating-value{color:#475569;font-weight:700}.profile-rating{margin-top:6px}
+@media(max-width:480px){.profile-stats{gap:6px}.profile-stat{padding:10px 6px}.profile-avatar{width:54px;height:54px;font-size:20px}.ad-footer{align-items:flex-start;flex-direction:column}.ad-tools{width:100%;justify-content:space-between}}
+</style>
+</head>
+<body>
+<header class="topbar">
+<div class="topbar-inner">
+<div class="logo">Granit<span>AS</span></div>
+<div class="nav-actions">
+<div id="user-mini" class="user-mini"></div>
+<button id="logout-btn" class="btn small secondary hidden" type="button">Çıxış</button>
+</div>
+</div>
+</header>
+
+<section id="auth-screen" class="auth-wrap hidden">
+<div class="auth-card">
+<div class="tabs">
+<button class="tab active" data-auth-tab="login" type="button">Giriş</button>
+<button class="tab" data-auth-tab="register" type="button">Qeydiyyat</button>
+</div>
+<form id="auth-form">
+<h1>GranitAS</h1>
+<p class="muted" id="auth-desc">Sistemə telefon nömrənizlə daxil olun.</p>
+<div class="form-group"><label for="auth-phone">Telefon nömrəsi</label><input id="auth-phone" class="form-control" type="tel" inputmode="tel" autocomplete="tel" placeholder="+994501234567" maxlength="13" required></div>
+<!-- YENİ ƏLAVƏ OLUNAN ŞİFRƏ XANASI -->
+<div class="form-group">
+  <label for="auth-password">Şifrə</label>
+  <input id="auth-password" class="form-control" type="password" placeholder="••••••••" minlength="6" required>
+</div>
+
+<div id="register-extra" class="hidden">
+<div class="grid">
+<div class="form-group"><label for="reg-name">Ad, soyad</label><input id="reg-name" class="form-control" maxlength="100" autocomplete="name"></div>
+<div class="form-group"><label for="reg-role">Rol</label><select id="reg-role" class="form-control"><option value="CARGO_OWNER">Yük sahibi</option><option value="CARRIER">Daşıyıcı</option></select></div>
+</div>
+<div class="form-group"><label for="reg-birth">Doğum tarixi</label><input id="reg-birth" class="form-control" type="date"></div>
+<div class="grid">
+<div class="form-group"><label for="reg-sv">ŞV seriya kodu</label><input id="reg-sv" class="form-control" maxlength="20" placeholder="Məs: AZE1234567" autocomplete="off"></div>
+<div class="form-group"><label for="reg-fin">FİN kodu</label><input id="reg-fin" class="form-control" maxlength="10" placeholder="7 simvol" autocomplete="off"></div>
+</div>
+</div>
+<button id="auth-submit-btn" class="btn" style="width:100%" type="submit">Daxil ol</button>
+</form>
+</div>
+</section>
+
+<main id="app" class="container">
+<div id="notice" class="notice hidden"></div>
+
+<section id="admin-panel" class="hidden">
+<div class="tabs">
+<button class="tab active" data-admin-tab="stats" type="button">Statistika</button>
+<button class="tab" data-admin-tab="ads" type="button">Elanlar</button>
+<button class="tab" data-admin-tab="users" type="button">İstifadəçilər</button>
+</div>
+<div id="admin-stats" class="admin-view">
+<div class="stats">
+<div class="stat">İstifadəçilər<b id="stat-users">0</b></div>
+<div class="stat">Yük elanları<b id="stat-cargo">0</b></div>
+<div class="stat">Tır elanları<b id="stat-trucks">0</b></div>
+</div>
+</div>
+<div id="admin-ads" class="admin-view hidden"><div class="card"><h3>Bütün elanlar</h3><div id="admin-ads-list"></div></div></div>
+<div id="admin-users" class="admin-view hidden"><div class="card"><h3>İstifadəçilər</h3><div style="overflow:auto"><table class="admin-table"><thead><tr><th>Ad</th><th>Telefon</th><th>ŞV</th><th>FİN</th><th>Rol</th><th></th></tr></thead><tbody id="admin-users-list"></tbody></table></div></div></div>
+</section>
+
+<section id="user-panel">
+<div class="tabs">
+<button class="tab active" data-main-tab="cargo" type="button">Yük Elanları</button>
+<button class="tab" data-main-tab="truck" type="button">Boş Tırlar</button>
+</div>
+<div class="searchbar">
+<input id="search-text" class="form-control" placeholder="Məs: Bakı, Gəncə, sement..." aria-label="Axtarış">
+<select id="search-truck" class="form-control"><option value="">Bütün tır növləri</option><option>Tent</option><option>Ref</option><option>Platforma</option><option>Furqon</option><option>Dump</option></select>
+<select id="search-sort" class="form-control"><option value="new">Ən yenilər</option><option value="old">Ən köhnələr</option></select>
+<button id="clear-search" class="btn secondary" type="button">Təmizlə</button>
+</div>
+<div id="cargo-view"><div id="cargo-list" class="ad-list"></div></div>
+<div id="truck-view" class="hidden"><div id="truck-list" class="ad-list"></div></div>
+</section>
+
+<section id="profile-panel" class="hidden">
+<div class="card">
+<div class="profile-hero"><div class="profile-avatar" id="profile-avatar">P</div><div><h2 id="profile-name">Profil</h2><div class="muted" id="profile-role"></div><div class="profile-rating" id="profile-rating"></div></div><button class="btn secondary small" id="refresh-profile" type="button">Yenilə</button></div>
+<div class="profile-stats"><div class="profile-stat"><span class="muted">Aktiv elan</span><b id="profile-active-count">0</b></div><div class="profile-stat"><span class="muted">Baxış</span><b id="profile-view-count">0</b></div><div class="profile-stat"><span class="muted">Favori</span><b id="profile-favorite-count">0</b></div></div>
+<hr style="border:0;border-top:1px solid var(--border);margin:15px 0">
+<div class="profile-meta">
+<div><div class="kpi">Telefon</div><b id="profile-phone"></b></div>
+<div><div class="kpi">Doğum tarixi</div><b id="profile-birth"></b></div>
+<div><div class="kpi">ŞV seriya</div><b id="profile-sv"></b></div>
+<div><div class="kpi">FİN</div><b id="profile-fin"></b></div>
+</div>
+</div>
+<div class="tabs"><button class="tab active" data-profile-tab="active" type="button">Aktiv elanlar</button><button class="tab" data-profile-tab="past" type="button">Keçmiş elanlar</button><button class="tab" data-profile-tab="favorites" type="button">❤️ Favorilər</button></div>
+<div id="profile-ads" class="ad-list"></div>
+</section>
+</main>
+
+<button id="fab" class="fab hidden" type="button" aria-label="Elan əlavə et">+</button>
+<nav id="bottom-nav" class="bottom-nav">
+<button class="nav-side active" data-bottom="home" type="button"><span class="nav-icon">⌂</span><span>Elanlar</span></button>
+<button id="nav-add" class="nav-add" type="button" aria-label="Elan əlavə et"><span>+</span></button>
+<button class="nav-side" data-bottom="profile" type="button"><span class="nav-icon">♙</span><span>Profil</span></button>
+</nav>
+
+<div id="ad-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div class="modal-box">
+<div class="modal-head"><h2 id="modal-title">Elan əlavə et</h2><button id="modal-close" class="close" type="button" aria-label="Bağla">×</button></div>
+<form id="ad-form">
+<input type="hidden" id="ad-id">
+<input type="hidden" id="ad-kind">
+<div class="grid">
+<div class="form-group"><label for="ad-product">Yük / elan adı</label><input id="ad-product" class="form-control" maxlength="120" required></div>
+<div class="form-group"><label for="ad-truck">Tır tipi</label><select id="ad-truck" class="form-control" required><option value="">Seçin</option><option>Tent</option><option>Ref</option><option>Platforma</option><option>Furqon</option><option>Dump</option></select></div>
+</div>
+<div class="grid">
+<div class="form-group"><label for="ad-from">Haradan</label><input id="ad-from" class="form-control" maxlength="100" required></div>
+<div class="form-group"><label for="ad-to">Haraya</label><input id="ad-to" class="form-control" maxlength="100" required></div>
+</div>
+<div id="cargo-fields">
+<div class="grid">
+<div class="form-group"><label for="ad-customs">Gömrük</label><input id="ad-customs" class="form-control" maxlength="100"></div>
+<div class="form-group"><label for="ad-load">Yükləmə tipi</label><select id="ad-load" class="form-control"><option value="">Seçin</option><option>Arxadan</option><option>Yandan</option><option>Yuxarıdan</option><option>Universal</option></select></div>
+</div>
+<div class="grid">
+<div class="form-group"><label for="ad-weight">Çəki (ton)</label><input id="ad-weight" class="form-control" type="number" min="0.1" max="100" step="0.1"></div>
+<div class="form-group"><label for="ad-pay">Ödəniş</label><input id="ad-pay" class="form-control" maxlength="100" placeholder="Məs: 1500 AZN"></div>
+</div>
+</div>
+<div class="grid">
+<div class="form-group"><label for="ad-date">Yükləmə tarixi</label><input id="ad-date" class="form-control" type="date" required></div>
+<div class="form-group"><label for="ad-expires">Son istifadə tarixi</label><input id="ad-expires" class="form-control" type="date" required></div>
+</div>
+<div class="actions"><button id="ad-submit" class="btn" type="submit">Dərc et</button><button id="ad-cancel" class="btn secondary" type="button">Ləğv et</button></div>
+</form>
+</div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBG6usK-VeVIrb_4uvFSz5oK58jXnwIMcY",
+  authDomain: "granitas-logistic.firebaseapp.com",
+  projectId: "granitas-logistic",
+  storageBucket: "granitas-logistic.firebasestorage.app",
+  messagingSenderId: "170442392201",
+  appId: "1:170442392201:web:d5316bb485e3d3504c7c58",
+  measurementId: "G-QH40G6CZ14"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const $=id=>document.getElementById(id);
+let currentUser=null,currentProfile=null,mainTab="cargo",profileTab="active",authMode="login";
+let unsub={cargo:null,truck:null,profileCargo:null,profileTruck:null,adminUsers:null,adminAdsCargo:null,adminAdsTruck:null,statsUsers:null,statsCargo:null,statsTruck:null};
+let cache={cargo:[],truck:[],profileCargo:[],profileTruck:[],adminCargo:[],adminTruck:[]};
+const SESSION_KEY="granitas_session_uid";
+const FAVORITES_KEY="granitas_favorites";
+const VIEWS_KEY="granitas_views";
+const RATINGS_KEY="granitas_ratings";
+
+function toast(msg,type=""){
+  const el=$("toast");
+  el.textContent=msg;
+  el.className="toast "+type;
+  clearTimeout(toast._t);
+  toast._t=setTimeout(()=>el.classList.add("hidden"),4000);
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+function normalizePhone(v){
+  let x=String(v||"").trim().replace(/[^\d+]/g,"");
+  if(x.startsWith("00"))x="+"+x.slice(2);
+  if(x.startsWith("0")&&x.length===10)x="+994"+x.slice(1);
+  return x;
+}
+function setBusy(btn,busy){if(!btn)return;btn.disabled=!!busy;btn.classList.toggle("loading",!!busy);}
+function friendlyError(e){
+  const m=e?.code||e?.message||"";
+  const map={
+    "permission-denied":"Bu əməliyyata icazə yoxdur. Firestore Security Rules-u yoxlayın.",
+    "unavailable":"Şəbəkə xətası. Yenidən cəhd edin.",
+    "failed-precondition":"Firestore indeks lazımdır. Console-dakı linkə klikləyin."
+  };
+  return map[m]||e?.message||"Əməliyyat alınmadı.";
+}
+function clearUnsub(k){if(unsub[k]){unsub[k]();unsub[k]=null;}}
+function clearAll(){Object.keys(unsub).forEach(clearUnsub);}
+
+function showAuth(mode){
+  authMode=mode||"login";
+  $("auth-screen").classList.remove("hidden");
+  $("app").classList.add("hidden");
+  $("bottom-nav").classList.add("hidden");
+  $("fab").classList.add("hidden");
+  $("register-extra").classList.toggle("hidden",authMode!=="register");
+  window.toggleFavorite=toggleFavorite;window.rateOwnerById=rateOwnerById;
+document.querySelectorAll("[data-auth-tab]").forEach(x=>x.classList.toggle("active",x.dataset.authTab===authMode));
+  $("auth-desc").textContent=authMode==="register"?"Yeni hesab yaradın.":"Sistemə telefon nömrənizlə daxil olun.";
+  $("auth-submit-btn").textContent=authMode==="register"?"Qeydiyyatdan keç":"Daxil ol";
+}
+
+async function findUserByPhone(phone){
+  const snap=await db.collection("users").where("phone","==",phone).limit(1).get();
+  if(snap.empty)return null;
+  const doc=snap.docs[0];
+  return {id:doc.id,...doc.data()};
+}
+
+async function hashPassword(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+  
+function completeLogin(profile){
+  currentProfile=profile;
+  currentUser={uid:profile.id,phoneNumber:profile.phone||""};
+  sessionStorage.setItem(SESSION_KEY,profile.id);
+  toast("Giriş uğurludur.","success");
+  showApp();
+}
+
+async function handleAuthSubmit(e){
+  e.preventDefault();
+  const phone = normalizePhone($("auth-phone").value);
+  const password = $("auth-password").value.trim();
+
+  if(!/^\+994\d{9}$/.test(phone)){
+    toast("Telefon +994XXXXXXXXX formatında olmalıdır.", "error");
+    return;
+  }
+
+  if(password.length < 6){
+    toast("Şifrə ən azı 6 simvol olmalıdır.", "error");
+    return;
+  }
+
+  const btn = $("auth-submit-btn");
+  setBusy(btn, true);
+
+  try{
+    const existing = await findUserByPhone(phone);
+    const passwordHash = await hashPassword(password);
+
+    if(authMode === "login"){
+      if(!existing){
+        toast("Bu nömrə ilə hesab tapılmadı. Qeydiyyata yönləndirilirsiniz.", "error");
+        showAuth("register");
+        $("auth-phone").value = phone;
+        return;
+      }
+
+      // Şifrə yoxlanışı
+      if(existing.passwordHash !== passwordHash){
+        toast("Daxil edilən şifrə yanlışdır!", "error");
+        return;
+      }
+
+      completeLogin(existing);
+      return;
+    }
+
+    // Qeydiyyat rejimində nömrənin təkrar yoxlanması
+    if(existing){
+      toast("Bu nömrə artıq qeydiyyatdadır. Giriş edin.", "error");
+      showAuth("login");
+      $("auth-phone").value = phone;
+      return;
+    }
+
+    const name = $("reg-name").value.trim();
+    const birth = $("reg-birth").value;
+    const sv = $("reg-sv").value.trim().toUpperCase();
+    const fin = $("reg-fin").value.trim().toUpperCase();
+
+    if(name.length < 2){ toast("Ad və soyad düzgün daxil edilməlidir.", "error"); return; }
+    if(!birth){ toast("Doğum tarixini daxil edin.", "error"); return; }
+    if(sv.length < 5){ toast("ŞV seriya kodunu düzgün daxil edin.", "error"); return; }
+    if(!/^[A-Z0-9]{5,10}$/.test(fin)){ toast("FİN kodu düzgün deyil.", "error"); return; }
+
+    const data = {
+      fullName: name,
+      phone,
+      passwordHash, // Şifrə xəşlənmiş halda saxlanılır
+      birthDate: birth,
+      role: $("reg-role").value,
+      svSeries: sv,
+      finCode: fin,
+      email: "",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const ref = await db.collection("users").add(data);
+    completeLogin({ id: ref.id, ...data });
+  }catch(err){
+    toast(friendlyError(err), "error");
+  }finally{
+    setBusy(btn, false);
+  }
+}
+
+
+function renderHeader(){
+  const name=currentProfile?.fullName||currentUser?.phoneNumber||"";
+  $("user-mini").textContent=name+(currentProfile?.role==="ADMIN"?" · Admin":"");
+  $("logout-btn").classList.remove("hidden");
+}
+
+function showPublicApp(){
+  $("auth-screen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("bottom-nav").classList.remove("hidden");
+  $("fab").classList.add("hidden");
+  $("logout-btn").classList.add("hidden");
+  $("user-mini").textContent="";
+  loadMainAds();
+}
+
+function showApp(){
+  $("auth-screen").classList.add("hidden");
+  $("app").classList.remove("hidden");
+  $("bottom-nav").classList.remove("hidden");
+  $("fab").classList.add("hidden");
+  renderHeader();
+  if(currentProfile?.role==="ADMIN"){
+    $("admin-panel").classList.remove("hidden");
+    $("user-panel").classList.remove("hidden");
+    loadAdmin();
+  }else{
+    $("admin-panel").classList.add("hidden");
+  }
+  setHome();
+  loadProfile();
+}
+
+function setMainTab(tab){
+  mainTab=tab;
+  $("user-panel").classList.remove("hidden");
+  $("profile-panel").classList.add("hidden");
+  document.querySelectorAll("[data-main-tab]").forEach(x=>x.classList.toggle("active",x.dataset.mainTab===tab));
+  $("cargo-view").classList.toggle("hidden",tab!=="cargo");
+  $("truck-view").classList.toggle("hidden",tab!=="truck");
+  loadMainAds();
+}
+
+function setProfile(){
+  if(!currentUser){showAuth("login");return;}
+  $("user-panel").classList.add("hidden");
+  $("profile-panel").classList.remove("hidden");
+  $("fab").classList.add("hidden");
+  document.querySelectorAll("[data-bottom]").forEach(x=>x.classList.toggle("active",x.dataset.bottom==="profile"));
+  loadProfile();
+}
+
+function setHome(){
+  $("profile-panel").classList.add("hidden");
+  $("user-panel").classList.remove("hidden");
+  $("fab").classList.add("hidden");
+  document.querySelectorAll("[data-bottom]").forEach(x=>x.classList.toggle("active",x.dataset.bottom==="home"));
+  setMainTab(mainTab||"cargo");
+}
+
+function loadMainAds(){
+  const qText=$("search-text").value.trim().toLowerCase();
+  const truck=$("search-truck").value;
+  const sort=$("search-sort").value;
+  clearUnsub("cargo");
+  clearUnsub("truck");
+  unsub.cargo=db.collection("cargo_ads").where("status","==","ACTIVE").limit(100).onSnapshot(s=>{
+    cache.cargo=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderFiltered("cargo",qText,truck,sort);
+  },e=>toast(friendlyError(e),"error"));
+  unsub.truck=db.collection("truck_ads").where("status","==","ACTIVE").limit(100).onSnapshot(s=>{
+    cache.truck=s.docs.map(d=>({id:d.id,...d.data()}));
+    renderFiltered("truck",qText,truck,sort);
+  },e=>toast(friendlyError(e),"error"));
+}
+
+function renderFiltered(kind, qText, truck, sort){
+  let arr = [...(cache[kind] || [])]
+    // Yalnız ACTIVE statusda olanları göstər
+    .filter(a => !a.status || a.status === "ACTIVE")
+    // Axtarış sözünə görə filtrlə
+    .filter(a => !qText || [a.productName, a.from, a.to, a.customs, a.truckType, a.loadType, a.ownerName]
+      .some(v => String(v || "").toLowerCase().includes(qText)))
+    // Tır tipinə görə filtrlə
+    .filter(a => !truck || a.truckType === truck);
+
+  // Sıralama (Tarixə görə)
+  arr.sort((a, b) => {
+    let tA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+    let tB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+    return tA - tB;
+  });
+
+  if (sort === "new") arr.reverse();
+
+  renderAds($(kind === "cargo" ? "cargo-list" : "truck-list"), arr, kind, false);
+}
+
+
+function getFavoriteKey(a,kind){return (a.collection||kind)+":"+a.id;}
+function getFavorites(){try{return JSON.parse(localStorage.getItem(FAVORITES_KEY)||"[]");}catch(_){return [];}}
+function isFavorite(a,kind){return getFavorites().includes(getFavoriteKey(a,kind));}
+function toggleFavorite(id,kind){const key=kind+":"+id;let list=getFavorites();if(list.includes(key))list=list.filter(x=>x!==key);else list.push(key);localStorage.setItem(FAVORITES_KEY,JSON.stringify(list));renderFiltered(kind,$("search-text").value.trim().toLowerCase(),$("search-truck").value,$("search-sort").value);if(currentUser)renderProfileStats();}
+function getViews(){try{return JSON.parse(localStorage.getItem(VIEWS_KEY)||"{}");}catch(_){return {};}}
+function registerView(a,kind){const key=getFavoriteKey(a,kind);const seenKey="granitas_seen_"+key;if(sessionStorage.getItem(seenKey))return;const views=getViews();views[key]=(views[key]||0)+1;localStorage.setItem(VIEWS_KEY,JSON.stringify(views));sessionStorage.setItem(seenKey,"1");}
+function getViewCount(a,kind){return getViews()[getFavoriteKey(a,kind)]||0;}
+function getRatings(){try{return JSON.parse(localStorage.getItem(RATINGS_KEY)||"{}");}catch(_){return {};}}
+function getOwnerRating(a){const key=a.ownerId||a.ownerPhone||a.ownerName||"unknown";const data=getRatings()[key]||{sum:0,count:0};return {key,...data,avg:data.count?data.sum/data.count:0};}
+function rateOwner(a,kind,value){const key=a.ownerId||a.ownerPhone||a.ownerName||"unknown";const ratings=getRatings();const old=ratings[key]||{sum:0,count:0};const previous=Number(localStorage.getItem("granitas_my_rating_"+key)||0);if(previous){old.sum-=previous;old.count=Math.max(0,old.count-1);}old.sum+=value;old.count+=1;ratings[key]=old;localStorage.setItem(RATINGS_KEY,JSON.stringify(ratings));localStorage.setItem("granitas_my_rating_"+key,String(value));renderFiltered(kind,$("search-text").value.trim().toLowerCase(),$("search-truck").value,$("search-sort").value);if(currentUser)renderProfileStats();}
+function ratingHtml(a,kind){const r=getOwnerRating(a);const my=Number(localStorage.getItem("granitas_my_rating_"+r.key)||0);return `<div class="rating"><span class="rating-stars">${[1,2,3,4,5].map(n=>`<button class="rate-btn ${my>=n?"active":""}" type="button" title="${n} ulduz" onclick="rateOwnerById('${esc(a.id)}','${esc(kind)}',${n})">★</button>`).join("")}</span><span class="rating-value">${r.avg?r.avg.toFixed(1):"Yeni"}${r.count?` (${r.count})`:""}</span></div>`;}
+function rateOwnerById(id,kind,value){const a=(cache[kind]||[]).find(x=>x.id===id);if(a)rateOwner(a,kind,value);}
+function renderAds(el,ads,kind,profile){
+  if(!ads.length){el.innerHTML='<div class="empty">Bu bölmədə elan yoxdur.</div>';return;}
+  el.innerHTML=ads.map(a=>{
+    registerView(a,kind);
+    const isCargo=kind==="cargo";
+    const coll=a.collection||(isCargo?"cargo_ads":"truck_ads");
+    const fav=isFavorite(a,kind);
+    return `<article class="ad-card">
+      <div class="ad-head"><div><div class="ad-title">${esc(isCargo?a.productName:"Boş tır")}</div><div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div></div><span class="badge">${esc(a.truckType)}</span></div>
+      <div class="details">
+        ${isCargo?`<div class="detail"><b>Çəki:</b> ${esc(a.weight)} ton</div><div class="detail"><b>Gömrük:</b> ${esc(a.customs||"—")}</div><div class="detail"><b>Yükləmə:</b> ${esc(a.loadType||"—")}</div><div class="detail"><b>Ödəniş:</b> ${esc(a.pay||"—")}</div>`:""}
+        <div class="detail"><b>Tarix:</b> ${esc(a.date||"—")}</div><div class="detail"><b>Son tarix:</b> ${esc(a.expiresAt||"—")}</div>
+      </div>
+      <div class="ad-footer"><div><div class="muted">${esc(a.ownerName||"İstifadəçi")}</div>${ratingHtml(a,kind)}</div><div class="ad-tools"><span class="views">👁 ${getViewCount(a,kind)} baxış</span><button class="favorite-btn ${fav?"active":""}" type="button" title="Favorilərə əlavə et" onclick="toggleFavorite('${esc(a.id)}','${esc(kind)}')">${fav?"❤️":"♡"}</button>${a.ownerPhone?`<a class="phone" href="tel:${esc(a.ownerPhone)}">${esc(a.ownerPhone)}</a>`:""}${profile?`<div class="actions"><button class="btn small secondary" type="button" onclick="editAd('${esc(coll)}','${esc(a.id)}')">Redaktə</button><button class="btn small danger" type="button" onclick="archiveAd('${esc(coll)}','${esc(a.id)}')">Arxivlə</button></div>`:""}</div></div>
+    </article>`;
+  }).join("");
+}
+
+function renderProfileStats(){
+  if(!currentUser)return;
+  const all=[...cache.profileCargo,...cache.profileTruck];
+  const active=all.filter(a=>a.status==="ACTIVE");
+  const fav=getFavorites().length;
+  const views=all.reduce((n,a)=>n+getViewCount(a,a.collection==="cargo_ads"?"cargo":"truck"),0);
+  $("profile-active-count").textContent=active.length;$("profile-view-count").textContent=views;$("profile-favorite-count").textContent=fav;
+  const name=currentProfile?.fullName||"Profil";$("profile-avatar").textContent=name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"P";
+  const ratings=getRatings();const ownKey=currentProfile?.id||currentProfile?.phone||currentProfile?.fullName||"unknown";const ownRating=ratings[ownKey]||{sum:0,count:0};const ownAvg=ownRating.count?(ownRating.sum/ownRating.count).toFixed(1):"Yeni";$("profile-rating").innerHTML=`<div class="rating"><span>★</span><b>${ownAvg}</b><span class="muted">${ownRating.count?ownRating.count+" qiymətləndirmə":"Hələ qiymətləndirilməyib"}</span></div>`;
+}
+
+function loadProfile(){
+  if(!currentUser)return;
+  clearUnsub("profileCargo");
+  clearUnsub("profileTruck");
+  $("profile-name").textContent=currentProfile?.fullName||"Profil";
+  $("profile-role").textContent=
+    currentProfile?.role==="CARGO_OWNER"?"Yük sahibi":
+    currentProfile?.role==="CARRIER"?"Daşıyıcı":
+    currentProfile?.role==="ADMIN"?"Admin":"—";
+  $("profile-phone").textContent=currentProfile?.phone||"—";
+  $("profile-birth").textContent=currentProfile?.birthDate||"—";
+  $("profile-sv").textContent=currentProfile?.svSeries||"—";
+  $("profile-fin").textContent=currentProfile?.finCode||"—";
+  renderProfileStats();
+
+  unsub.profileCargo=db.collection("cargo_ads").where("ownerId","==",currentUser.uid).limit(100).onSnapshot(s=>{
+    cache.profileCargo=s.docs.map(d=>({id:d.id,collection:"cargo_ads",...d.data()}));
+    renderProfile();
+  },e=>toast(friendlyError(e),"error"));
+  unsub.profileTruck=db.collection("truck_ads").where("ownerId","==",currentUser.uid).limit(100).onSnapshot(s=>{
+    cache.profileTruck=s.docs.map(d=>({id:d.id,collection:"truck_ads",...d.data()}));
+    renderProfile();
+  },e=>toast(friendlyError(e),"error"));
+}
+
+function renderProfile(){
+  const all=[...cache.profileCargo,...cache.profileTruck]
+    .filter(a=>profileTab==="active"?a.status==="ACTIVE":profileTab==="past"?a.status!=="ACTIVE":isFavorite(a,a.collection==="cargo_ads"?"cargo":"truck"));
+  if(!all.length){
+    $("profile-ads").innerHTML='<div class="empty">Elan yoxdur.</div>';
+    return;
+  }
+  $("profile-ads").innerHTML=all.map(a=>{
+    const cargo=a.collection==="cargo_ads";
+    return `<article class="ad-card">
+      <div class="ad-head">
+        <div>
+          <div class="ad-title">${esc(cargo?a.productName:"Boş tır")}</div>
+          <div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div>
+        </div>
+        <span class="badge">${esc(a.status||"")}</span>
+      </div>
+      <div class="details">
+        ${cargo?`<div class="detail"><b>Çəki:</b> ${esc(a.weight)} ton</div>
+        <div class="detail"><b>Ödəniş:</b> ${esc(a.pay||"—")}</div>`:""}
+        <div class="detail"><b>Tır:</b> ${esc(a.truckType)}</div>
+        <div class="detail"><b>Tarix:</b> ${esc(a.date)}</div>
+      </div>
+      <div class="ad-footer">
+        <div><span class="muted">${esc(a.expiresAt||"")}</span><div class="ad-tools"><span class="views">👁 ${getViewCount(a,a.collection==="cargo_ads"?"cargo":"truck")} baxış</span>${ratingHtml(a,a.collection==="cargo_ads"?"cargo":"truck")}</div></div>
+        <div class="actions"><button class="favorite-btn ${isFavorite(a,a.collection==="cargo_ads"?"cargo":"truck")?"active":""}" type="button" onclick="toggleFavorite('${esc(a.id)}','${esc(a.collection==="cargo_ads"?"cargo":"truck")}')">${isFavorite(a,a.collection==="cargo_ads"?"cargo":"truck")?"❤️":"♡"}</button>
+          ${a.status==="ACTIVE"?`
+            <button class="btn small secondary" type="button" onclick="editAd('${esc(a.collection)}','${esc(a.id)}')">Redaktə</button>
+            <button class="btn small danger" type="button" onclick="archiveAd('${esc(a.collection)}','${esc(a.id)}')">Arxivlə</button>
+          `:""}
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+async function openAdModal(kind,id){
+  kind=kind||"cargo";
+  id=id||"";
+  if(!currentUser){showAuth("login");return;}
+  $("ad-form").reset();
+  $("ad-id").value=id;
+  $("ad-kind").value=kind;
+  $("modal-title").textContent=id?"Elanı redaktə et":"Elan əlavə et";
+  $("cargo-fields").classList.toggle("hidden",kind!=="cargo");
+  $("ad-product").required=kind==="cargo";
+  if(kind==="truck")$("ad-product").value="Boş tır";
+  if(id){
+    try{
+      const snap=await db.collection(kind==="cargo"?"cargo_ads":"truck_ads").doc(id).get();
+      if(!snap.exists)throw new Error("Elan tapılmadı");
+      const a=snap.data();
+      $("ad-product").value=a.productName||"";
+      $("ad-truck").value=a.truckType||"";
+      $("ad-from").value=a.from||"";
+      $("ad-to").value=a.to||"";
+      $("ad-customs").value=a.customs||"";
+      $("ad-load").value=a.loadType||"";
+      $("ad-weight").value=a.weight||"";
+      $("ad-pay").value=a.pay||"";
+      $("ad-date").value=a.date||"";
+      $("ad-expires").value=a.expiresAt||"";
+    }catch(e){
+      toast(friendlyError(e),"error");
+      return;
+    }
+  }
+  $("ad-modal").classList.add("open");
+}
+
+async function editAd(collection,id){
+  await openAdModal(collection==="cargo_ads"?"cargo":"truck",id);
+}
+async function archiveAd(collection,id){
+  if(!currentUser)return;
+  if(!confirm("Bu elanı arxivə göndərmək istəyirsiniz?"))return;
+  try{
+    await db.collection(collection).doc(id).update({
+      status:"ARCHIVED",
+      archivedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+    toast("Elan arxivləndi.","success");
+  }catch(e){toast(friendlyError(e),"error");}
+}
+window.editAd=editAd;
+window.archiveAd=archiveAd;
+
+$("ad-form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!currentUser||!currentProfile)return;
+  const kind=$("ad-kind").value;
+  const id=$("ad-id").value;
+  const collection=kind==="cargo"?"cargo_ads":"truck_ads";
+  const date=$("ad-date").value;
+  const expires=$("ad-expires").value;
+  if(expires<date){
+    toast("Son tarix yükləmə tarixindən əvvəl ola bilməz.","error");
+    return;
+  }
+  const data={
+    productName:kind==="cargo"?$("ad-product").value.trim():"Boş tır",
+    from:$("ad-from").value.trim(),
+    to:$("ad-to").value.trim(),
+    truckType:$("ad-truck").value,
+    date,
+    expiresAt:expires,
+    status:"ACTIVE",
+    ownerId:currentUser.uid,
+    ownerName:currentProfile.fullName||"",
+    ownerPhone:currentProfile.phone||"",
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+  if(kind==="cargo"){
+    Object.assign(data,{
+      customs:$("ad-customs").value.trim(),
+      loadType:$("ad-load").value,
+      weight:Number($("ad-weight").value||0),
+      pay:$("ad-pay").value.trim()
+    });
+  }
+  const btn=$("ad-submit");
+  setBusy(btn,true);
+  try{
+    if(id)await db.collection(collection).doc(id).update(data);
+    else await db.collection(collection).add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    $("ad-modal").classList.remove("open");
+    toast(id?"Elan yeniləndi.":"Elan dərc edildi.","success");
+  }catch(err){toast(friendlyError(err),"error");}
+  finally{setBusy(btn,false);}
+});
+
+function loadAdmin(){
+  if(currentProfile?.role!=="ADMIN")return;
+  clearUnsub("statsUsers");
+  clearUnsub("statsCargo");
+  clearUnsub("statsTruck");
+  unsub.statsUsers=db.collection("users").onSnapshot(s=>$("stat-users").textContent=s.size,e=>toast(friendlyError(e),"error"));
+  unsub.statsCargo=db.collection("cargo_ads").where("status","==","ACTIVE").onSnapshot(s=>$("stat-cargo").textContent=s.size,e=>toast(friendlyError(e),"error"));
+  unsub.statsTruck=db.collection("truck_ads").where("status","==","ACTIVE").onSnapshot(s=>$("stat-trucks").textContent=s.size,e=>toast(friendlyError(e),"error"));
+}
+
+function renderAdminAdsList(){
+  const list=$("admin-ads-list");
+  const all=[
+    ...cache.adminCargo.map(a=>({...a,kind:"Yük",collection:"cargo_ads"})),
+    ...cache.adminTruck.map(a=>({...a,kind:"Tır",collection:"truck_ads"}))
+  ];
+  all.sort((a,b)=>String(b.createdAt?.toDate?.()||b.createdAt||"").localeCompare(String(a.createdAt?.toDate?.()||a.createdAt||"")));
+  if(!all.length){
+    list.innerHTML="<div class='empty'>Elan yoxdur.</div>";
+    return;
+  }
+  list.innerHTML=all.map(a=>`<div class="card">
+    <b>${esc(a.kind)} · ${esc(a.productName||"Boş tır")}</b>
+    <div>${esc(a.from)} → ${esc(a.to)}</div>
+    <small>${esc(a.ownerName)} · ${esc(a.ownerPhone)} · ${esc(a.status||"")}</small>
+    <div class="actions" style="margin-top:8px">
+      ${a.status==="ACTIVE"?`<button class="btn small danger" type="button" onclick="adminArchive('${esc(a.collection)}','${esc(a.id)}')">Arxivlə</button>`:""}
+    </div>
+  </div>`).join("");
+}
+
+function loadMainAds(){
+  const qText = $("search-text").value.trim().toLowerCase();
+  const truck = $("search-truck").value;
+  const sort = $("search-sort").value;
+  
+  clearUnsub("cargo");
+  clearUnsub("truck");
+
+  // Yük elanlarını gətiririk
+  unsub.cargo = db.collection("cargo_ads").limit(100).onSnapshot(s => {
+    cache.cargo = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderFiltered("cargo", qText, truck, sort);
+  }, e => toast(friendlyError(e), "error"));
+
+  // Tır elanlarını gətiririk
+  unsub.truck = db.collection("truck_ads").limit(100).onSnapshot(s => {
+    cache.truck = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderFiltered("truck", qText, truck, sort);
+  }, e => toast(friendlyError(e), "error"));
+}
+
+function loadAdminUsers(){
+  clearUnsub("adminUsers");
+  unsub.adminUsers=db.collection("users").orderBy("createdAt","desc").limit(200).onSnapshot(s=>{
+    $("admin-users-list").innerHTML=s.docs.map(d=>{
+      const u=d.data();
+      return `<tr>
+        <td>${esc(u.fullName)}</td>
+        <td>${esc(u.phone)}</td>
+        <td>${esc(u.svSeries||"—")}</td>
+        <td>${esc(u.finCode||"—")}</td>
+        <td>${esc(u.role)}</td>
+        <td>${u.role!=="ADMIN"?`<button class="btn small danger" type="button" onclick="deleteUserProfile('${esc(d.id)}')">Sil</button>`:""}</td>
+      </tr>`;
+    }).join("");
+  },e=>toast(friendlyError(e),"error"));
+}
+
+async function adminArchive(collection,id){
+  if(currentProfile?.role!=="ADMIN"){toast("İcazə yoxdur.","error");return;}
+  try{
+    await db.collection(collection).doc(id).update({
+      status:"ARCHIVED",
+      archivedAt:firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+    toast("Elan arxivləndi.","success");
+  }catch(e){toast(friendlyError(e),"error");}
+}
+async function deleteUserProfile(uid){
+  if(currentProfile?.role!=="ADMIN")return;
+  if(!confirm("Bu istifadəçinin profil məlumatını silmək istəyirsiniz?"))return;
+  try{
+    await db.collection("users").doc(uid).delete();
+    toast("Profil sənədi silindi.","success");
+  }catch(e){toast(friendlyError(e),"error");}
+}
+window.adminArchive=adminArchive;
+window.deleteUserProfile=deleteUserProfile;
+
+async function restoreSession(){
+  const uid=sessionStorage.getItem(SESSION_KEY);
+  if(!uid)return false;
+  try{
+    const snap=await db.collection("users").doc(uid).get();
+    if(!snap.exists){
+      sessionStorage.removeItem(SESSION_KEY);
+      return false;
+    }
+    currentProfile={id:snap.id,...snap.data()};
+    currentUser={uid:snap.id,phoneNumber:currentProfile.phone||""};
+    showApp();
+    return true;
+  }catch(_){
+    sessionStorage.removeItem(SESSION_KEY);
+    return false;
+  }
+}
+
+function logout(){
+  clearAll();
+  sessionStorage.removeItem(SESSION_KEY);
+  currentUser=null;
+  currentProfile=null;
+  $("user-mini").textContent="";
+  $("logout-btn").classList.add("hidden");
+  showPublicApp();
+}
+
+document.querySelectorAll("[data-auth-tab]").forEach(b=>{
+  b.onclick=()=>showAuth(b.dataset.authTab);
+});
+$("auth-form").addEventListener("submit",handleAuthSubmit);
+document.querySelectorAll("[data-main-tab]").forEach(b=>{
+  b.onclick=()=>setMainTab(b.dataset.mainTab);
+});
+document.querySelectorAll("[data-bottom]").forEach(b=>{
+  b.onclick=()=>b.dataset.bottom==="profile"?setProfile():setHome();
+});
+document.querySelectorAll("[data-admin-tab]").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("[data-admin-tab]").forEach(x=>x.classList.toggle("active",x===b));
+    ["stats","ads","users"].forEach(x=>$("admin-"+x).classList.toggle("hidden",x!==b.dataset.adminTab));
+    if(b.dataset.adminTab==="ads")loadAdminAds();
+    if(b.dataset.adminTab==="users")loadAdminUsers();
+  };
+});
+document.querySelectorAll("[data-profile-tab]").forEach(b=>{
+  b.onclick=()=>{
+    profileTab=b.dataset.profileTab;
+    document.querySelectorAll("[data-profile-tab]").forEach(x=>x.classList.toggle("active",x===b));
+    renderProfile();
+  };
+});
+$("logout-btn").onclick=logout;
+$("nav-add").onclick=()=>{
+  if(!currentUser){showAuth("login");return;}
+  openAdModal(currentProfile?.role==="CARRIER"?"truck":"cargo","");
+};
+$("fab").onclick=()=>{
+  if(!currentUser){showAuth("login");return;}
+  openAdModal(currentProfile?.role==="CARRIER"?"truck":"cargo","");
+};
+$("modal-close").onclick=()=>$("ad-modal").classList.remove("open");
+$("ad-cancel").onclick=()=>$("ad-modal").classList.remove("open");
+$("refresh-profile").onclick=loadProfile;
+function refilter(){
+  renderFiltered(mainTab,$("search-text").value.trim().toLowerCase(),$("search-truck").value,$("search-sort").value);
+}
+$("search-text").oninput=refilter;
+$("search-truck").onchange=refilter;
+$("search-sort").onchange=refilter;
+$("clear-search").onclick=()=>{
+  $("search-text").value="";
+  $("search-truck").value="";
+  $("search-sort").value="new";
+  loadMainAds();
+};
+window.addEventListener("beforeunload",clearAll);
+
+(async function init(){
+  showPublicApp();
+  await restoreSession();
+})();
+</script>
+</body>
+</html>
