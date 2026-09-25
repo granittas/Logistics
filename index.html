@@ -10,8 +10,14 @@
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <style>
 :root{--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--primary:#0ea5e9;--hover:#0284c7;--border:#e2e8f0;--danger:#ef4444;--success:#10b981;--warning:#f59e0b}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}body{min-height:100vh}.hidden{display:none!important}
-button,input,select{font:inherit}button{cursor:pointer;border:0}.container{max-width:1180px;margin:auto;padding:16px;padding-bottom:92px}.topbar{background:#050505;color:#fff;position:sticky;top:0;z-index:30}.topbar-inner{max-width:1180px;margin:auto;min-height:64px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:800}.logo span{color:var(--primary)}.user-mini{font-size:13px;color:#cbd5e1}.nav-actions{display:flex;align-items:center;gap:8px}.btn{padding:10px 14px;border-radius:10px;font-weight:700;background:var(--primary);color:#fff}.btn:hover{background:var(--hover)}.btn.secondary{background:#e2e8f0;color:#0f172a}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.btn.small{padding:7px 10px;font-size:12px}.auth-wrap{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:24px}.auth-card{width:min(480px,100%);background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 12px 40px #0f172a12}.auth-card h1{margin:0 0 8px}.muted{color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin:0 0 16px}.tab{padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;white-space:nowrap}.tab.active{background:#0f172a;color:#fff;border-color:#0f172a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}.card h2,.card h3{margin:0 0 12px}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.form-control{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:0}.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px #0ea5e91c}.actions{display:flex;gap:8px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}.stat b{display:block;font-size:28px;margin-top:6px}.ad-list{display:grid;gap:12px}.ad-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:15px}.ad-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.ad-title{font-size:18px;font-weight:800}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:800;background:#e0f2fe;color:#0369a1}.route{margin:8px 0;font-weight:700}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;color:#334155;font-size:13px}.detail{padding:7px 9px;background:#f8fafc;border-radius:8px}.ad-footer{margin-top:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--border);padding-top:10px}.phone{color:var(--primary);font-weight:700;text-decoration:none}.empty{text-align:center;padding:30px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:14px}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}.modal-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:20px}.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:7px max(16px,calc((100vw - 560px)/2));z-index:40;box-shadow:0 -5px 20px #0f172a0a}.bottom-nav button{background:#fff;border:0;font-weight:700}.nav-side{height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#64748b;border-radius:12px}.nav-side.active{color:#0369a1;background:#e0f2fe}.nav-side span:last-child{font-size:11px}.nav-icon{font-size:21px;line-height:1}.nav-add{width:58px;height:58px;border-radius:50%!important;background:var(--primary)!important;color:#fff;justify-self:center;box-shadow:0 7px 20px #0f172a33;font-size:32px;line-height:1;display:grid;place-items:center;transform:translateY(-12px);border:5px solid #fff!important}.nav-add:hover{background:var(--hover)!important}.fab{display:none}.toast{position:fixed;right:16px;top:80px;z-index:100;background:#0f172a;color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 8px 25px #0003;max-width:min(420px,calc(100vw - 32px))}.toast.error{background:#991b1b}.toast.success{background:#065f46}.loading{opacity:.6;pointer-events:none}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th,.admin-table td{padding:9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}.notice{padding:12px;border-radius:10px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;margin-bottom:14px}.searchbar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:14px}.profile-row{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.profile-meta{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:8px}.kpi{font-size:12px;color:var(--muted)}@media(max-width:760px){.grid,.grid-3,.stats{grid-template-columns:1fr}.searchbar{grid-template-columns:1fr}.topbar-inner{align-items:flex-start}.user-mini{max-width:180px}.details{grid-template-columns:1fr}.bottom-nav{justify-content:space-around}.bottom-nav button{font-size:11px;padding:8px}.fab{right:15px}.profile-meta{grid-template-columns:1fr}}
+*{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+  body{min-height:100vh}.hidden{display:none!important}
+button,input,select{font:inherit}
+  button{cursor:pointer;border:0}
+  .container{max-width:1180px;margin:auto;padding:16px;padding-bottom:92px}
+  .topbar{background:#050505;color:#fff;position:sticky;top:0;z-index:30}
+  .topbar-inner{max-width:1180px;margin:auto;min-height:64px;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:23px;font-weight:800}.logo span{color:var(--primary)}.user-mini{font-size:13px;color:#cbd5e1}.nav-actions{display:flex;align-items:center;gap:8px}.btn{padding:10px 14px;border-radius:10px;font-weight:700;background:var(--primary);color:#fff}.btn:hover{background:var(--hover)}.btn.secondary{background:#e2e8f0;color:#0f172a}.btn.danger{background:var(--danger)}.btn.success{background:var(--success)}.btn.small{padding:7px 10px;font-size:12px}.auth-wrap{min-height:calc(100vh - 64px);display:grid;place-items:center;padding:24px}.auth-card{width:min(480px,100%);background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:0 12px 40px #0f172a12}.auth-card h1{margin:0 0 8px}.muted{color:var(--muted)}.tabs{display:flex;gap:8px;overflow:auto;margin:0 0 16px}.tab{padding:10px 14px;border:1px solid var(--border);background:#fff;border-radius:10px;white-space:nowrap}.tab.active{background:#0f172a;color:#fff;border-color:#0f172a}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px}.card h2,.card h3{margin:0 0 12px}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.form-control{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:0}.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px #0ea5e91c}.actions{display:flex;gap:8px;flex-wrap:wrap}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px}.stat b{display:block;font-size:28px;margin-top:6px}.ad-list{display:grid;gap:12px}.ad-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:15px}.ad-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.ad-title{font-size:18px;font-weight:800}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:15px;font-weight:800;background:#e0f2fe;color:#0369a1}.route{margin:8px 0;font-weight:700}.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;color:#334155;font-size:13px}.detail{padding:7px 9px;background:#f8fafc;border-radius:8px}.ad-footer{margin-top:12px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--border);padding-top:10px}.phone{color:var(--primary);font-weight:700;text-decoration:none}.empty{text-align:center;padding:30px;color:var(--muted);background:#fff;border:1px dashed var(--border);border-radius:14px}.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}.modal.open{display:flex}.modal-box{width:min(650px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:20px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{background:#f1f5f9;border-radius:50%;width:34px;height:34px;font-size:20px}.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:70px;background:#fff;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 80px 1fr;align-items:center;padding:7px max(16px,calc((100vw - 560px)/2));z-index:40;box-shadow:0 -5px 20px #0f172a0a}.bottom-nav button{background:#fff;border:0;font-weight:700}.nav-side{height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#64748b;border-radius:12px}.nav-side.active{color:#0369a1;background:#e0f2fe}.nav-side span:last-child{font-size:11px}.nav-icon{font-size:21px;line-height:1}.nav-add{width:58px;height:58px;border-radius:50%!important;background:var(--primary)!important;color:#fff;justify-self:center;box-shadow:0 7px 20px #0f172a33;font-size:32px;line-height:1;display:grid;place-items:center;transform:translateY(-12px);border:5px solid #fff!important}.nav-add:hover{background:var(--hover)!important}.fab{display:none}.toast{position:fixed;right:16px;top:80px;z-index:100;background:#0f172a;color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 8px 25px #0003;max-width:min(420px,calc(100vw - 32px))}.toast.error{background:#991b1b}.toast.success{background:#065f46}.loading{opacity:.6;pointer-events:none}.admin-table{width:100%;border-collapse:collapse;font-size:13px}.admin-table th,.admin-table td{padding:9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}.notice{padding:12px;border-radius:10px;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;margin-bottom:14px}.searchbar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:8px;margin-bottom:14px}.profile-row{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.profile-meta{display:grid;grid-template-columns:repeat(2,minmax(180px,1fr));gap:8px}.kpi{font-size:12px;color:var(--muted)}@media(max-width:760px){.grid,.grid-3,.stats{grid-template-columns:1fr}.searchbar{grid-template-columns:1fr}.topbar-inner{align-items:flex-start}.user-mini{max-width:180px}.details{grid-template-columns:1fr}.bottom-nav{justify-content:space-around}.bottom-nav button{font-size:11px;padding:8px}.fab{right:15px}.profile-meta{grid-template-columns:1fr}}
 
 @media(max-width:480px){.topbar-inner{padding:9px 12px}.logo{font-size:21px}.container{padding:12px;padding-bottom:88px}.auth-wrap{padding:16px}.auth-card{padding:18px}.bottom-nav{height:66px;grid-template-columns:1fr 72px 1fr;padding:6px 10px}.nav-add{width:54px;height:54px;font-size:29px}.nav-side{height:50px}.nav-icon{font-size:19px}}
 
@@ -124,12 +130,28 @@ button,input,select{font:inherit}button{cursor:pointer;border:0}.container{max-w
 <div id="ad-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
 <div class="modal-box">
 <div class="modal-head"><h2 id="modal-title">Elan əlavə et</h2><button id="modal-close" class="close" type="button" aria-label="Bağla">×</button></div>
+<div id="admin-ad-type" class="tabs hidden" style="margin-bottom:14px">
+  <button class="tab active" data-admin-ad-kind="cargo" type="button">🚚 Yük elan et</button>
+  <button class="tab" data-admin-ad-kind="truck" type="button">🚛 Daşıyıcı elan et</button>
+</div>
 <form id="ad-form">
 <input type="hidden" id="ad-id">
 <input type="hidden" id="ad-kind">
+  <div id="elan-novu-secimi" class="tabs" style="margin-bottom:14px">
+  <button type="button" class="tab active" data-elans-novu="cargo">
+    🚚 Yük sahibi kimi elan əlavə et
+  </button>
+  <button type="button" class="tab" data-elans-novu="truck">
+    🚛 Daşıyıcı kimi elan əlavə et
+  </button>
+</div>
 <div class="grid">
 <div class="form-group"><label for="ad-product">Yük / elan adı</label><input id="ad-product" class="form-control" maxlength="120" required></div>
 <div class="form-group"><label for="ad-truck">Tır tipi</label><select id="ad-truck" class="form-control" required><option value="">Seçin</option><option>Tent</option><option>Ref</option><option>Platforma</option><option>Furqon</option><option>Dump</option></select></div>
+  <div class="form-group">
+  <label for="ad-truck-count">Tır sayı</label>
+  <input id="ad-truck-count" class="form-control" type="number" min="1" max="100" step="1" value="1">
+</div>
 </div>
 <div class="grid">
 <div class="form-group"><label for="ad-from">Haradan</label><input id="ad-from" class="form-control" maxlength="100" required></div>
@@ -422,7 +444,46 @@ function renderFiltered(kind, qText, truck, sort){
 function getFavoriteKey(a,kind){return (a.collection||kind)+":"+a.id;}
 function getFavorites(){try{return JSON.parse(localStorage.getItem(FAVORITES_KEY)||"[]");}catch(_){return [];}}
 function isFavorite(a,kind){return getFavorites().includes(getFavoriteKey(a,kind));}
-function toggleFavorite(id,kind){const key=kind+":"+id;let list=getFavorites();if(list.includes(key))list=list.filter(x=>x!==key);else list.push(key);localStorage.setItem(FAVORITES_KEY,JSON.stringify(list));renderFiltered(kind,$("search-text").value.trim().toLowerCase(),$("search-truck").value,$("search-sort").value);if(currentUser)renderProfileStats();}
+
+async function toggleFavorite(id,kind){
+  if(!currentUser){showAuth("login");return;}
+  try{
+    const snap=await db.collection("favorites")
+      .where("userId","==",currentUser.uid)
+      .where("adId","==",id)
+      .where("kind","==",kind)
+      .limit(1)
+      .get();
+
+    if(!snap.empty){
+      await snap.docs[0].ref.delete();
+      toast("Favoridən silindi");
+    }else{
+      await db.collection("favorites").add({
+        userId:currentUser.uid,
+        adId:id,
+        kind:kind,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      toast("Favorilərə əlavə edildi");
+    }
+
+    renderFiltered(
+      kind,
+      $("search-text").value.trim().toLowerCase(),
+      $("search-truck").value,
+      $("search-sort").value
+    );
+
+    renderProfileStats();
+
+    if(profileTab==="favorites")renderProfile();
+  }catch(e){
+    console.error(e);
+    toast(friendlyError(e),"error");
+  }
+}
+  
 function getViews(){try{return JSON.parse(localStorage.getItem(VIEWS_KEY)||"{}");}catch(_){return {};}}
 function registerView(a,kind){const key=getFavoriteKey(a,kind);const seenKey="granitas_seen_"+key;if(sessionStorage.getItem(seenKey))return;const views=getViews();views[key]=(views[key]||0)+1;localStorage.setItem(VIEWS_KEY,JSON.stringify(views));sessionStorage.setItem(seenKey,"1");}
 function getViewCount(a,kind){return getViews()[getFavoriteKey(a,kind)]||0;}
@@ -439,12 +500,20 @@ function renderAds(el,ads,kind,profile){
     const coll=a.collection||(isCargo?"cargo_ads":"truck_ads");
     const fav=isFavorite(a,kind);
     return `<article class="ad-card">
-      <div class="ad-head"><div><div class="ad-title">${esc(isCargo?a.productName:"Boş tır")}</div><div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div></div><span class="badge">${esc(a.truckType)}</span></div>
+      <div class="ad-head"><div>
+    <div class="ad-title">${esc(isCargo?a.productName:"Boş tır" )}</div>
+    <div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div></div><span class="badge">${esc(a.truckType)}</span></div>
       <div class="details">
         ${isCargo?`<div class="detail"><b>Çəki:</b> ${esc(a.weight)} ton</div><div class="detail"><b>Gömrük:</b> ${esc(a.customs||"—")}</div><div class="detail"><b>Yükləmə:</b> ${esc(a.loadType||"—")}</div><div class="detail"><b>Ödəniş:</b> ${esc(a.pay||"—")}</div>`:""}
-        <div class="detail"><b>Tarix:</b> ${esc(a.date||"—")}</div><div class="detail"><b>Son tarix:</b> ${esc(a.expiresAt||"—")}</div>
+        ${!isCargo?`<div class="detail"><b>🚛 Tır sayı:</b> ${esc(a.truckCount||1)}</div>`:""}
+    <div class="detail"><b>Tarix:</b> ${esc(a.date||"—")}</div>
+    <div class="detail"><b>Son tarix:</b> ${esc(a.expiresAt||"—")}</div>
       </div>
-      <div class="ad-footer"><div><div class="muted">${esc(a.ownerName||"İstifadəçi")}</div>${ratingHtml(a,kind)}</div><div class="ad-tools"><span class="views">👁 ${getViewCount(a,kind)} baxış</span><button class="favorite-btn ${fav?"active":""}" type="button" title="Favorilərə əlavə et" onclick="toggleFavorite('${esc(a.id)}','${esc(kind)}')">${fav?"❤️":"♡"}</button>${a.ownerPhone?`<a class="phone" href="tel:${esc(a.ownerPhone)}">${esc(a.ownerPhone)}</a>`:""}${profile?`<div class="actions"><button class="btn small secondary" type="button" onclick="editAd('${esc(coll)}','${esc(a.id)}')">Redaktə</button><button class="btn small danger" type="button" onclick="archiveAd('${esc(coll)}','${esc(a.id)}')">Arxivlə</button></div>`:""}</div></div>
+      <div class="ad-footer"><div><div class="muted">${esc(a.ownerName||"İstifadəçi")}</div>${ratingHtml(a,kind)}</div>
+    <div class="ad-tools"><span class="views">👁 ${getViewCount(a,kind)} baxış</span>
+    <button class="favorite-btn ${fav?"active":""}" type="button" title="Favorilərə əlavə et" onclick="toggleFavorite('${esc(a.id)}','${esc(kind)}')">${fav?"❤️":"♡"}</button>${a.ownerPhone?`<a class="phone" href="tel:${esc(a.ownerPhone)}">${esc(a.ownerPhone)}</a>`:""}${profile?`<div class="actions">
+    <button class="btn small secondary" type="button" onclick="editAd('${esc(coll)}','${esc(a.id)}')">Redaktə</button>
+    <button class="btn small danger" type="button" onclick="archiveAd('${esc(coll)}','${esc(a.id)}')">Arxivlə</button></div>`:""}</div></div>
     </article>`;
   }).join("");
 }
@@ -460,6 +529,19 @@ function renderProfileStats(){
   const ratings=getRatings();const ownKey=currentProfile?.id||currentProfile?.phone||currentProfile?.fullName||"unknown";const ownRating=ratings[ownKey]||{sum:0,count:0};const ownAvg=ownRating.count?(ownRating.sum/ownRating.count).toFixed(1):"Yeni";$("profile-rating").innerHTML=`<div class="rating"><span>★</span><b>${ownAvg}</b><span class="muted">${ownRating.count?ownRating.count+" qiymətləndirmə":"Hələ qiymətləndirilməyib"}</span></div>`;
 }
 
+  document.querySelectorAll("[data-elans-novu]").forEach(düymə=>{
+  düymə.addEventListener("click",()=>{
+    const növ=düymə.dataset.elansNovu;
+    $("ad-kind").value=növ;
+    document.querySelectorAll("[data-elans-novu]").forEach(x=>{
+      x.classList.toggle("active",x===düymə);
+    });
+    $("cargo-fields").classList.toggle("hidden",növ!=="cargo");
+    $("ad-product").required=növ==="cargo";
+    if(növ==="truck")$("ad-product").value="Boş tır";
+  });
+});
+  
 function loadProfile(){
   if(!currentUser)return;
   clearUnsub("profileCargo");
@@ -485,6 +567,31 @@ function loadProfile(){
   },e=>toast(friendlyError(e),"error"));
 }
 
+async function getFirebaseFavorites(){
+  if(!currentUser)return [];
+  const snap=await db.collection("favorites")
+    .where("userId","==",currentUser.uid)
+    .get();
+
+  const neticeler=[];
+
+  for(const doc of snap.docs){
+    const fav=doc.data();
+    const kolleksiya=fav.kind==="cargo"?"cargo_ads":"truck_ads";
+    const elan=await db.collection(kolleksiya).doc(fav.adId).get();
+
+    if(elan.exists){
+      neticeler.push({
+        id:elan.id,
+        collection:kolleksiya,
+        ...elan.data()
+      });
+    }
+  }
+
+  return neticeler;
+}
+  
 function renderProfile(){
   const all=[...cache.profileCargo,...cache.profileTruck]
     .filter(a=>profileTab==="active"?a.status==="ACTIVE":profileTab==="past"?a.status!=="ACTIVE":isFavorite(a,a.collection==="cargo_ads"?"cargo":"truck"));
@@ -498,6 +605,7 @@ function renderProfile(){
       <div class="ad-head">
         <div>
           <div class="ad-title">${esc(cargo?a.productName:"Boş tır")}</div>
+          ${!isCargo?`<div class="route">🚛 Tır sayı: ${esc(a.truckCount||1)}</div>`:""}
           <div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div>
         </div>
         <span class="badge">${esc(a.status||"")}</span>
@@ -528,6 +636,12 @@ async function openAdModal(kind,id){
   $("ad-form").reset();
   $("ad-id").value=id;
   $("ad-kind").value=kind;
+  const admin=currentProfile?.role==="ADMIN";
+$("admin-ad-type").classList.add("hidden");
+
+document.querySelectorAll("[data-admin-ad-kind],[data-elans-novu]").forEach(x=>{
+  x.classList.toggle("active",(x.dataset.adminAdKind||x.dataset.elansNovu)===kind);
+});
   $("modal-title").textContent=id?"Elanı redaktə et":"Elan əlavə et";
   $("cargo-fields").classList.toggle("hidden",kind!=="cargo");
   $("ad-product").required=kind==="cargo";
@@ -539,6 +653,7 @@ async function openAdModal(kind,id){
       const a=snap.data();
       $("ad-product").value=a.productName||"";
       $("ad-truck").value=a.truckType||"";
+      $("ad-truck-count").value=a.truckCount||1;
       $("ad-from").value=a.from||"";
       $("ad-to").value=a.to||"";
       $("ad-customs").value=a.customs||"";
@@ -590,6 +705,7 @@ $("ad-form").addEventListener("submit",async e=>{
     from:$("ad-from").value.trim(),
     to:$("ad-to").value.trim(),
     truckType:$("ad-truck").value,
+    truckCount:Number($("ad-truck-count").value||1),
     date,
     expiresAt:expires,
     status:"ACTIVE",
@@ -627,6 +743,28 @@ function loadAdmin(){
   unsub.statsTruck=db.collection("truck_ads").where("status","==","ACTIVE").onSnapshot(s=>$("stat-trucks").textContent=s.size,e=>toast(friendlyError(e),"error"));
 }
 
+document.querySelectorAll("[data-admin-ad-kind]").forEach(b=>{
+  b.onclick=()=>{
+    const kind=b.dataset.adminAdKind;
+
+    $("ad-kind").value=kind;
+
+    document.querySelectorAll("[data-admin-ad-kind]").forEach(x=>{
+      x.classList.toggle("active",x===b);
+    });
+
+    $("cargo-fields").classList.toggle("hidden",kind!=="cargo");
+
+    $("ad-product").required=kind==="cargo";
+
+    if(kind==="truck"){
+      $("ad-product").value="Boş tır";
+    }else if($("ad-product").value==="Boş tır"){
+      $("ad-product").value="";
+    }
+  };
+});
+  
 function renderAdminAdsList(){
   const list=$("admin-ads-list");
   const all=[
@@ -765,11 +903,7 @@ document.querySelectorAll("[data-profile-tab]").forEach(b=>{
 $("logout-btn").onclick=logout;
 $("nav-add").onclick=()=>{
   if(!currentUser){showAuth("login");return;}
-  openAdModal(currentProfile?.role==="CARRIER"?"truck":"cargo","");
-};
-$("fab").onclick=()=>{
-  if(!currentUser){showAuth("login");return;}
-  openAdModal(currentProfile?.role==="CARRIER"?"truck":"cargo","");
+  openAdModal("cargo","");
 };
 $("modal-close").onclick=()=>$("ad-modal").classList.remove("open");
 $("ad-cancel").onclick=()=>$("ad-modal").classList.remove("open");
