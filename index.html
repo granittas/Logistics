@@ -348,6 +348,9 @@ function renderHeader(){
   $("logout-btn").classList.remove("hidden");
 }
 
+// GranitAS admin WhatsApp nömrəsi
+const ADMIN_WHATSAPP = "994702538945";
+  
 function showPublicApp(){
   $("auth-screen").classList.add("hidden");
   $("app").classList.remove("hidden");
@@ -492,7 +495,22 @@ function getOwnerRating(a){const key=a.ownerId||a.ownerPhone||a.ownerName||"unkn
 function rateOwner(a,kind,value){const key=a.ownerId||a.ownerPhone||a.ownerName||"unknown";const ratings=getRatings();const old=ratings[key]||{sum:0,count:0};const previous=Number(localStorage.getItem("granitas_my_rating_"+key)||0);if(previous){old.sum-=previous;old.count=Math.max(0,old.count-1);}old.sum+=value;old.count+=1;ratings[key]=old;localStorage.setItem(RATINGS_KEY,JSON.stringify(ratings));localStorage.setItem("granitas_my_rating_"+key,String(value));renderFiltered(kind,$("search-text").value.trim().toLowerCase(),$("search-truck").value,$("search-sort").value);if(currentUser)renderProfileStats();}
 function ratingHtml(a,kind){const r=getOwnerRating(a);const my=Number(localStorage.getItem("granitas_my_rating_"+r.key)||0);return `<div class="rating"><span class="rating-stars">${[1,2,3,4,5].map(n=>`<button class="rate-btn ${my>=n?"active":""}" type="button" title="${n} ulduz" onclick="rateOwnerById('${esc(a.id)}','${esc(kind)}',${n})">★</button>`).join("")}</span><span class="rating-value">${r.avg?r.avg.toFixed(1):"Yeni"}${r.count?` (${r.count})`:""}</span></div>`;}
 function rateOwnerById(id,kind,value){const a=(cache[kind]||[]).find(x=>x.id===id);if(a)rateOwner(a,kind,value);}
-function renderAds(el,ads,kind,profile){
+function whatsappSifarisLinki(elan, nov) {
+  const elanNovu = nov === "cargo" ? "Yük" : "Boş tır";
+
+  const mesaj = [
+    "Salam. GranitAS platformasında bu elanla maraqlanıram.",
+    `📌 Elan növü: ${elanNovu}`,
+    `📦 ${nov === "cargo" ? `Yük: ${elan.productName || "—"}` : "Boş tır"}`,
+    `📍 Marşrut: ${elan.from || "—"} → ${elan.to || "—"}`,
+    `🚚 Tır: ${elan.truckType || "—"}`,
+    nov === "cargo" ? `⚖️ Çəki: ${elan.weight || "—"} ton` : "",
+    `📅 Tarix: ${elan.date || "—"}`
+  ].filter(Boolean).join("\n");
+
+  return `https://wa.me/${ADMIN_WHATSAPP}?text=${encodeURIComponent(mesaj)}`;
+}
+  function renderAds(el,ads,kind,profile){
   if(!ads.length){el.innerHTML='<div class="empty">Bu bölmədə elan yoxdur.</div>';return;}
   el.innerHTML=ads.map(a=>{
     registerView(a,kind);
@@ -511,7 +529,12 @@ function renderAds(el,ads,kind,profile){
       </div>
       <div class="ad-footer"><div><div class="muted">${esc(a.ownerName||"İstifadəçi")}</div>${ratingHtml(a,kind)}</div>
     <div class="ad-tools"><span class="views">👁 ${getViewCount(a,kind)} baxış</span>
-    <button class="favorite-btn ${fav?"active":""}" type="button" title="Favorilərə əlavə et" onclick="toggleFavorite('${esc(a.id)}','${esc(kind)}')">${fav?"❤️":"♡"}</button>${a.ownerPhone?`<a class="phone" href="tel:${esc(a.ownerPhone)}">${esc(a.ownerPhone)}</a>`:""}${profile?`<div class="actions">
+    <button class="favorite-btn ${fav?"active":""}" type="button" title="Favorilərə əlavə et" onclick="toggleFavorite('${esc(a.id)}','${esc(kind)}')">${fav?"❤️":"♡"}</button>
+    <a class="btn small"
+  target="_blank"
+  href="${whatsappSifarisLinki(a, kind)}">
+  WhatsApp ilə sifariş et</a>
+    ${profile?`<div class="actions">
     <button class="btn small secondary" type="button" onclick="editAd('${esc(coll)}','${esc(a.id)}')">Redaktə</button>
     <button class="btn small danger" type="button" onclick="archiveAd('${esc(coll)}','${esc(a.id)}')">Arxivlə</button></div>`:""}</div></div>
     </article>`;
