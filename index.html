@@ -190,12 +190,22 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
+const auth=firebase.auth();
+const phoneToEmail=p=>p.replace("+","")+"@granitas.app";
+function authError(e){
+  const c=e?.code||"";
+  if(["auth/invalid-credential","auth/user-not-found","auth/wrong-password"].includes(c))return "Nömrə və ya şifrə yanlışdır.";
+  if(c==="auth/email-already-in-use")return "Bu nömrə artıq qeydiyyatdadır. Giriş edin.";
+  if(c==="auth/too-many-requests")return "Çox cəhd edildi. Bir az sonra yenidən yoxlayın.";
+  return friendlyError(e);
+}
 const $=id=>document.getElementById(id);
 let currentUser=null,currentProfile=null,mainTab="cargo",profileTab="active",authMode="login";
 let unsub={cargo:null,truck:null,profileCargo:null,profileTruck:null,adminUsers:null,adminAdsCargo:null,adminAdsTruck:null,statsUsers:null,statsCargo:null,statsTruck:null};
 let cache={cargo:[],truck:[],profileCargo:[],profileTruck:[],adminCargo:[],adminTruck:[]};
 const SESSION_KEY="granitas_session_uid";
 const FAVORITES_KEY="granitas_favorites";
+  let firebaseFavorites = [];
 const VIEWS_KEY="granitas_views";
 const RATINGS_KEY="granitas_ratings";
 
@@ -349,7 +359,7 @@ function renderHeader(){
 }
 
 // GranitAS admin WhatsApp nömrəsi
-const ADMIN_WHATSAPP = "994503108166";
+const ADMIN_WHATSAPP = "994702538945";
   
 function showPublicApp(){
   $("auth-screen").classList.add("hidden");
@@ -446,8 +456,12 @@ function renderFiltered(kind, qText, truck, sort){
 
 function getFavoriteKey(a,kind){return (a.collection||kind)+":"+a.id;}
 function getFavorites(){try{return JSON.parse(localStorage.getItem(FAVORITES_KEY)||"[]");}catch(_){return [];}}
-function isFavorite(a,kind){return getFavorites().includes(getFavoriteKey(a,kind));}
-
+function isFavorite(a,kind){
+  return firebaseFavorites.some(f =>
+    f.id === a.id &&
+    f.collection === (a.collection || (kind === "cargo" ? "cargo_ads" : "truck_ads"))
+  );
+}
 async function toggleFavorite(id,kind){
   if(!currentUser){showAuth("login");return;}
   try{
@@ -470,7 +484,7 @@ async function toggleFavorite(id,kind){
       });
       toast("Favorilərə əlavə edildi");
     }
-
+firebaseFavorites = await getFirebaseFavorites();
     renderFiltered(
       kind,
       $("search-text").value.trim().toLowerCase(),
@@ -545,7 +559,7 @@ function renderProfileStats(){
   if(!currentUser)return;
   const all=[...cache.profileCargo,...cache.profileTruck];
   const active=all.filter(a=>a.status==="ACTIVE");
-  const fav=getFavorites().length;
+  const fav=firebaseFavorites.length;
   const views=all.reduce((n,a)=>n+getViewCount(a,a.collection==="cargo_ads"?"cargo":"truck"),0);
   $("profile-active-count").textContent=active.length;$("profile-view-count").textContent=views;$("profile-favorite-count").textContent=fav;
   const name=currentProfile?.fullName||"Profil";$("profile-avatar").textContent=name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"P";
@@ -565,8 +579,10 @@ function renderProfileStats(){
   });
 });
   
-function loadProfile(){
+async function loadProfile(){
   if(!currentUser)return;
+
+  firebaseFavorites = await getFirebaseFavorites();
   clearUnsub("profileCargo");
   clearUnsub("profileTruck");
   $("profile-name").textContent=currentProfile?.fullName||"Profil";
@@ -615,7 +631,48 @@ async function getFirebaseFavorites(){
   return neticeler;
 }
   
-function renderProfile(){
+async function renderProfile(){
+  if(profileTab==="favorites"){
+  const all=await getFirebaseFavorites();
+
+  if(!all.length){
+    $("profile-ads").innerHTML='<div class="empty">Favorilərdə elan yoxdur.</div>';
+    return;
+  }
+  $("profile-ads").innerHTML=all.map(a=>{
+    const cargo=a.collection==="cargo_ads";
+
+    return `<article class="ad-card">
+      <div class="ad-head">
+        <div>
+          <div class="ad-title">${esc(cargo?a.productName:"Boş tır")}</div>
+          ${!cargo?`<div class="route">🚛 Tır sayı: ${esc(a.truckCount||1)}</div>`:""}
+          <div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div>
+        </div>
+        <span class="badge">${esc(a.status||"")}</span>
+      </div>
+
+      <div class="details">
+        ${cargo?`<div class="detail"><b>Çəki:</b> ${esc(a.weight)} ton</div>
+        <div class="detail"><b>Ödəniş:</b> ${esc(a.pay||"—")}</div>`:""}
+        <div class="detail"><b>Tır:</b> ${esc(a.truckType)}</div>
+        <div class="detail"><b>Tarix:</b> ${esc(a.date)}</div>
+      </div>
+    <div class="ad-footer">
+  <div></div>
+  <div class="actions">
+    <button
+      class="favorite-btn active"
+      type="button"
+      onclick="toggleFavorite('${esc(a.id)}','${esc(cargo?"cargo":"truck")}')"
+    >❤️</button>
+  </div>
+</div>
+    </article>`;
+  }).join("");
+
+  return;
+}
   const all=[...cache.profileCargo,...cache.profileTruck]
     .filter(a=>profileTab==="active"?a.status==="ACTIVE":profileTab==="past"?a.status!=="ACTIVE":isFavorite(a,a.collection==="cargo_ads"?"cargo":"truck"));
   if(!all.length){
@@ -628,7 +685,7 @@ function renderProfile(){
       <div class="ad-head">
         <div>
           <div class="ad-title">${esc(cargo?a.productName:"Boş tır")}</div>
-          ${!isCargo?`<div class="route">🚛 Tır sayı: ${esc(a.truckCount||1)}</div>`:""}
+          ${!cargo?`<div class="route">🚛 Tır sayı: ${esc(a.truckCount||1)}</div>`:""}
           <div class="route">📍 ${esc(a.from)} → ${esc(a.to)}</div>
         </div>
         <span class="badge">${esc(a.status||"")}</span>
@@ -647,7 +704,7 @@ function renderProfile(){
             <button class="btn small danger" type="button" onclick="archiveAd('${esc(a.collection)}','${esc(a.id)}')">Arxivlə</button>
           `:""}
         </div>
-      </div>
+      </div>  
     </article>`;
   }).join("");
 }
