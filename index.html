@@ -88,14 +88,13 @@ button,input,select{font:inherit}
   <tr>
     <th>Ad</th>
     <th>Telefon</th>
-    <th>Rol</th>
     <th>Doğum tarixi</th>
+    <th>Rol</th>
     <th></th>
   </tr>
 </thead>
   <tbody id="admin-users-list"></tbody></table></div></div></div>
 </section>
-y
 <section id="user-panel">
 <div class="tabs">
 <button class="tab active" data-main-tab="cargo" type="button">Yük Elanları</button>
@@ -960,7 +959,7 @@ function loadAdminUsers(){
       return `<tr>
         <td>${esc(u.fullName)}</td>
         <td>${esc(u.phone)}</td>
-       <td>${esc(u.birthDate || "—")}</td>
+        <td>${esc(u.birthDate || "—")}</td>
         <td>${esc(u.role)}</td>
         <td>${u.role!=="ADMIN"?`<button class="btn small danger" type="button" onclick="deleteUserProfile('${esc(d.id)}')">Sil</button>`:""}</td>
       </tr>`;
