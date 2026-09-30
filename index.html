@@ -83,7 +83,17 @@ button,input,select{font:inherit}
 </div>
 </div>
 <div id="admin-ads" class="admin-view hidden"><div class="card"><h3>Bütün elanlar</h3><div id="admin-ads-list"></div></div></div>
-<div id="admin-users" class="admin-view hidden"><div class="card"><h3>İstifadəçilər</h3><div style="overflow:auto"><table class="admin-table"><thead><tr><th>Ad</th><th>Telefon</th><th>Rol</th><th></th></tr></thead><tbody id="admin-users-list"></tbody></table></div></div></div>
+<div id="admin-users" class="admin-view hidden"><div class="card"><h3>İstifadəçilər</h3><div style="overflow:auto"><table class="admin-table">
+<thead>
+  <tr>
+    <th>Ad</th>
+    <th>Telefon</th>
+    <th>Rol</th>
+    <th>Doğum tarixi</th>
+    <th></th>
+  </tr>
+</thead>
+  <tbody id="admin-users-list"></tbody></table></div></div></div>
 </section>
 y
 <section id="user-panel">
@@ -950,6 +960,7 @@ function loadAdminUsers(){
       return `<tr>
         <td>${esc(u.fullName)}</td>
         <td>${esc(u.phone)}</td>
+       <td>${esc(u.birthDate || "—")}</td>
         <td>${esc(u.role)}</td>
         <td>${u.role!=="ADMIN"?`<button class="btn small danger" type="button" onclick="deleteUserProfile('${esc(d.id)}')">Sil</button>`:""}</td>
       </tr>`;
