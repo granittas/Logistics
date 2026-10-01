@@ -1060,7 +1060,7 @@ document.querySelectorAll("[data-admin-tab]").forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll("[data-admin-tab]").forEach(x=>x.classList.toggle("active",x===b));
     ["stats","ads","users"].forEach(x=>$("admin-"+x).classList.toggle("hidden",x!==b.dataset.adminTab));
-    if(b.dataset.adminTab==="ads")loadAdminAds();
+    if(b.dataset.adminTab==="ads")renderAdminAdsList();
     if(b.dataset.adminTab==="users")loadAdminUsers();
   };
 });
